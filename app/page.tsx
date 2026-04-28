@@ -439,9 +439,9 @@ export default function Home() {
                 <label>
                   <span>默认尺寸</span>
                   <select value={size} onChange={(event) => setSize(event.target.value)}>
-                    <option value="1024x1024">1920 × 1080 正方形</option>
+                    <option value="1024x1024">1920 × 1080 横图</option>
                     <option value="1024x1536">1024 × 1536 竖图</option>
-                    <option value="1536x1024">1020 × 1020 横图</option>
+                    <option value="1536x1024">1020 × 1020 正方形</option>
                   </select>
                 </label>
               ) : (
