@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "太极图 | EastWill",
-  description: "太极图 - EastWill 传统文化风格 AI 图像工作台",
+  description: "太极图 - EastWill AI 图像工作台",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
