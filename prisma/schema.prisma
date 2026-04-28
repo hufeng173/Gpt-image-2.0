@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(cuid())
+  email      String     @unique
+  name       String?
+  role       UserRole   @default(USER)
+  dailyQuota Int        @default(20)
+  createdAt  DateTime   @default(now())
+  jobs       ImageJob[]
+  images     Image[]
+}
+
+model ImageJob {
+  id           String    @id @default(cuid())
+  userId       String?
+  user         User?     @relation(fields: [userId], references: [id])
+  provider     String    @default("relay")
+  model        String
+  prompt       String    @db.Text
+  negative     String?   @db.Text
+  size         String    @default("1024x1024")
+  count        Int       @default(1)
+  status       JobStatus @default(PENDING)
+  errorMessage String?   @db.Text
+  rawResponse  Json?
+  createdAt    DateTime  @default(now())
+  finishedAt   DateTime?
+  images       Image[]
+}
+
+model Image {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       ImageJob @relation(fields: [jobId], references: [id])
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  url       String   @db.Text
+  width     Int?
+  height    Int?
+  seed      String?
+  createdAt DateTime @default(now())
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
