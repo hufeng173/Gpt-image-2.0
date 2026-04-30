@@ -6,35 +6,56 @@ import { getErrorMessage, getShortErrorReason, getUpstreamStatus } from "@/lib/e
 
 const ChatMessageSchema = z.object({
   role: z.enum(["user", "assistant"]),
-  content: z.string().min(1).max(4000),
+  content: z.string().min(1).max(8000),
+});
+
+const ReferenceImageSchema = z.object({
+  category: z.enum(["composition", "color", "material", "lighting", "other"]),
+  url: z.string().min(1),
+  name: z.string().optional(),
 });
 
 const OptimizeSchema = z.object({
-  prompt: z.string().min(1).max(4000),
+  prompt: z.string().min(1).max(6000),
   negative: z.string().optional(),
   userMessage: z.string().optional(),
   selectedImageUrl: z.string().optional(),
-  referenceImageUrls: z.array(z.string()).max(8).optional(),
-  conversation: z.array(ChatMessageSchema).max(20).optional(),
+  referenceImageUrls: z.array(z.string()).max(20).optional(),
+  referenceImages: z.array(ReferenceImageSchema).max(20).optional(),
+  conversation: z.array(ChatMessageSchema).max(40).optional(),
   model: z.string().optional(),
 });
 
 function fallbackOptimize(input: z.infer<typeof OptimizeSchema>) {
   const extras = [
-    "东方美学",
-    "高级商业视觉",
-    "留白构图",
+    "画面主体明确",
+    "构图稳定",
+    "层次清晰",
     "细腻光影",
-    "画面干净",
-    "质感真实",
-    "细节丰富",
+    "材质真实",
+    "高级商业视觉",
+    "东方美学留白",
   ].join("，");
 
-  const referenceNote = input.selectedImageUrl || input.referenceImageUrls?.length
-    ? "，参考已上传图片的主体、构图或风格进行延展"
+  const categoryNotes = input.referenceImages?.length
+    ? input.referenceImages
+        .map((item) => {
+          const labelMap = {
+            composition: "构图",
+            color: "配色",
+            material: "材质",
+            lighting: "光线",
+            other: "其他",
+          } as const;
+          return `参考${labelMap[item.category]}图`;
+        })
+        .join("，")
     : "";
 
-  return `${input.prompt}，${extras}${referenceNote}`;
+  const selectedNote = input.selectedImageUrl ? "，保留选中图片的主体和核心构图并按新要求优化" : "";
+  const referenceNote = categoryNotes ? `，重点参考：${categoryNotes}` : "";
+
+  return `${input.prompt}，${extras}${selectedNote}${referenceNote}`;
 }
 
 export async function POST(request: NextRequest) {
@@ -51,13 +72,14 @@ export async function POST(request: NextRequest) {
         userMessage: input.userMessage,
         selectedImageUrl: input.selectedImageUrl,
         referenceImageUrls: input.referenceImageUrls,
+        referenceImages: input.referenceImages,
         conversation: input.conversation,
       });
 
       return NextResponse.json({
         ok: true,
         optimizedPrompt,
-        reply: "已根据上下文和参考信息优化提示词。",
+        reply: "已根据当前对话、选中图片和分类参考图优化提示词。",
         usedFallback: false,
       });
     } catch (error) {

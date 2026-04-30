@@ -18,14 +18,11 @@ export type AppSettings = {
 export const DEFAULT_SETTINGS: AppSettings = {
   maxConcurrentGenerations: 8,
   defaultImageModel: process.env.AI_IMAGE_MODEL || "gpt-image-2",
-  promptOptimizerModel: process.env.AI_TEXT_MODEL || "gpt-5.2",
+  promptOptimizerModel: process.env.AI_TEXT_MODEL || "gpt-5.4",
   allowReferenceImageEdit: true,
   imageModels: [
-    { id: "gpt-image-2", name: "GPT Image 2", note: "当前已验证可用" },
-    { id: "gpt-image-1", name: "GPT Image 1" },
-    { id: "banana", name: "Banana" },
-    { id: "nano-banana", name: "Nano Banana" },
-    { id: "dall-e-3", name: "DALL·E 3" },
+    { id: "gpt-image-2", name: "GPT Image 2", note: "推荐" },
+
   ],
 };
 
@@ -33,7 +30,7 @@ const SETTINGS_FILE = path.join(process.cwd(), "data", "settings.json");
 
 function normalizeSettings(value: Partial<AppSettings>): AppSettings {
   const maxConcurrentGenerations = Math.min(
-    12,
+    16,
     Math.max(1, Number(value.maxConcurrentGenerations || DEFAULT_SETTINGS.maxConcurrentGenerations)),
   );
 

@@ -7,6 +7,7 @@ export const runtime = "nodejs";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
+const ALLOWED_CATEGORIES = new Set(["composition", "color", "material", "lighting", "other"]);
 
 function extensionFromType(type: string) {
   if (type === "image/jpeg") return ".jpg";
@@ -15,33 +16,47 @@ function extensionFromType(type: string) {
 }
 
 export async function POST(request: NextRequest) {
-  const formData = await request.formData();
-  const files = formData.getAll("files");
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
+  try {
+    const formData = await request.formData();
+    const files = formData.getAll("files");
+    const categoryValue = String(formData.get("category") || "other");
+    const category = ALLOWED_CATEGORIES.has(categoryValue) ? categoryValue : "other";
 
-  const uploaded = [];
+    const uploadDir = path.join(process.cwd(), "public", "uploads", category);
+    await mkdir(uploadDir, { recursive: true });
 
-  for (const item of files) {
-    if (!(item instanceof File)) continue;
-    if (!ALLOWED_TYPES.has(item.type)) continue;
-    if (item.size > MAX_FILE_SIZE) continue;
+    const uploaded = [];
 
-    const buffer = Buffer.from(await item.arrayBuffer());
-    const fileName = `${Date.now()}-${nanoid(8)}${extensionFromType(item.type)}`;
-    const filePath = path.join(uploadDir, fileName);
-    await writeFile(filePath, buffer);
+    for (const item of files) {
+      if (!(item instanceof File)) continue;
+      if (!ALLOWED_TYPES.has(item.type)) continue;
+      if (item.size > MAX_FILE_SIZE) continue;
 
-    uploaded.push({
-      url: `/uploads/${fileName}`,
-      name: item.name,
-      type: item.type,
-      size: item.size,
+      const buffer = Buffer.from(await item.arrayBuffer());
+      const fileName = `${Date.now()}-${nanoid(8)}${extensionFromType(item.type)}`;
+      const filePath = path.join(uploadDir, fileName);
+      await writeFile(filePath, buffer);
+
+      uploaded.push({
+        url: `/uploads/${category}/${fileName}`,
+        name: item.name,
+        type: item.type,
+        size: item.size,
+        category,
+      });
+    }
+
+    return NextResponse.json({
+      ok: true,
+      files: uploaded,
     });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: error instanceof Error ? error.message : "上传失败",
+      },
+      { status: 400 },
+    );
   }
-
-  return NextResponse.json({
-    ok: true,
-    files: uploaded,
-  });
 }
