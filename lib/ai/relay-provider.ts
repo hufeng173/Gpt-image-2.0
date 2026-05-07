@@ -9,7 +9,12 @@ export type RelayImageItem = {
 
 export type RelayChatMessage = {
   role: "system" | "user" | "assistant";
-  content: string;
+  content:
+    | string
+    | Array<
+        | { type: "text"; text: string }
+        | { type: "image_url"; image_url: { url: string } }
+      >;
 };
 
 export const relayClient = new OpenAI({
@@ -36,22 +41,31 @@ export async function generateImageByRelay(input: {
 export async function editImageByRelay(input: {
   model?: string;
   prompt: string;
-  imageBuffer: Buffer;
+  imageBuffer?: Buffer;
+  imageBuffers?: Buffer[];
   fileName?: string;
   mimeType?: string;
   size?: "1024x1024" | "1024x1536" | "1536x1024";
   count?: number;
 }) {
-  const file = await toFile(input.imageBuffer, input.fileName || "reference.png", {
-    type: input.mimeType || "image/png",
-  });
+  const imageBuffers = input.imageBuffers || (input.imageBuffer ? [input.imageBuffer] : []);
+  if (imageBuffers.length === 0) throw new Error("图片编辑需要至少一张参考图。");
+
+  const files = await Promise.all(
+    imageBuffers.slice(0, 16).map((buffer, index) =>
+      toFile(buffer, index === 0 ? input.fileName || "reference.png" : `reference-${index + 1}.png`, {
+        type: input.mimeType || "image/png",
+      }),
+    ),
+  );
 
   const result = await relayClient.images.edit({
     model: input.model || process.env.AI_IMAGE_MODEL || "gpt-image-2",
-    image: file,
+    image: files.length === 1 ? files[0] : files,
     prompt: input.prompt,
     size: input.size || "1024x1024",
     n: input.count || 1,
+    input_fidelity: "high",
   });
 
   return (result.data || []) as RelayImageItem[];
@@ -63,7 +77,7 @@ export async function chatByRelay(input: {
 }) {
   const result = await relayClient.chat.completions.create({
     model: input.model || process.env.AI_TEXT_MODEL || "gpt-5.4",
-    messages: input.messages,
+    messages: input.messages as never,
   });
 
   return result.choices[0]?.message?.content?.trim() || "";
@@ -72,7 +86,6 @@ export async function chatByRelay(input: {
 export async function optimizePromptByRelay(input: {
   model?: string;
   prompt: string;
-  negative?: string;
   userMessage?: string;
   selectedImageUrl?: string;
   referenceImageUrls?: string[];
@@ -109,19 +122,28 @@ export async function optimizePromptByRelay(input: {
     {
       role: "user",
       content: [
-        `原始提示词：${input.prompt}`,
-        input.negative ? `负面提示词：${input.negative}` : "",
-        input.userMessage ? `用户补充要求：${input.userMessage}` : "",
-        referenceText,
-        input.conversation?.length
-          ? `最近上下文：\n${input.conversation
-              .slice(-10)
-              .map((item) => `${item.role === "user" ? "用户" : "助手"}：${item.content}`)
-              .join("\n")}`
-          : "",
-      ]
-        .filter(Boolean)
-        .join("\n\n"),
+        {
+          type: "text",
+          text: [
+            `原始提示词：${input.prompt}`,
+            input.userMessage ? `用户补充要求：${input.userMessage}` : "",
+            referenceText,
+            input.conversation?.length
+              ? `最近上下文：\n${input.conversation
+                  .slice(-10)
+                  .map((item) => `${item.role === "user" ? "用户" : "助手"}：${item.content}`)
+                  .join("\n")}`
+              : "",
+          ]
+            .filter(Boolean)
+            .join("\n\n"),
+        },
+        ...(input.selectedImageUrl ? [{ type: "image_url" as const, image_url: { url: input.selectedImageUrl } }] : []),
+        ...(input.referenceImages || []).slice(0, 8).map((item) => ({
+          type: "image_url" as const,
+          image_url: { url: item.url },
+        })),
+      ],
     },
   ];
 

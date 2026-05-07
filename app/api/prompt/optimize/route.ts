@@ -3,6 +3,10 @@ import { z } from "zod";
 import { optimizePromptByRelay } from "@/lib/ai/relay-provider";
 import { getAppSettings } from "@/lib/settings";
 import { getErrorMessage, getShortErrorReason, getUpstreamStatus } from "@/lib/error-reason";
+import { localImageUrlToDataUrl } from "@/lib/image-files";
+import { requireAccessSession } from "@/lib/access-control";
+
+const MAX_VISION_OPTIMIZE_REFERENCES = 8;
 
 const ChatMessageSchema = z.object({
   role: z.enum(["user", "assistant"]),
@@ -16,8 +20,7 @@ const ReferenceImageSchema = z.object({
 });
 
 const OptimizeSchema = z.object({
-  prompt: z.string().min(1).max(6000),
-  negative: z.string().optional(),
+  prompt: z.string().max(6000).optional().default(""),
   userMessage: z.string().optional(),
   selectedImageUrl: z.string().optional(),
   referenceImageUrls: z.array(z.string()).max(20).optional(),
@@ -27,6 +30,7 @@ const OptimizeSchema = z.object({
 });
 
 function fallbackOptimize(input: z.infer<typeof OptimizeSchema>) {
+  const basePrompt = input.prompt.trim() || input.userMessage?.trim() || "请生成一段高质量 AI 作图提示词";
   const extras = [
     "画面主体明确",
     "构图稳定",
@@ -55,24 +59,35 @@ function fallbackOptimize(input: z.infer<typeof OptimizeSchema>) {
   const selectedNote = input.selectedImageUrl ? "，保留选中图片的主体和核心构图并按新要求优化" : "";
   const referenceNote = categoryNotes ? `，重点参考：${categoryNotes}` : "";
 
-  return `${input.prompt}，${extras}${selectedNote}${referenceNote}`;
+  return `${basePrompt}，${extras}${selectedNote}${referenceNote}`;
 }
 
 export async function POST(request: NextRequest) {
   try {
+    await requireAccessSession(request);
     const body = await request.json();
     const input = OptimizeSchema.parse(body);
     const settings = await getAppSettings();
+    const selectedImageUrl = input.selectedImageUrl?.startsWith("/")
+      ? await localImageUrlToDataUrl(input.selectedImageUrl, { maxEdge: 1024, quality: 82, format: "jpeg" })
+      : input.selectedImageUrl;
+    const referenceImages = await Promise.all(
+      (input.referenceImages || []).slice(0, MAX_VISION_OPTIMIZE_REFERENCES).map(async (item) => ({
+        ...item,
+        url: item.url.startsWith("/")
+          ? await localImageUrlToDataUrl(item.url, { maxEdge: 1024, quality: 82, format: "jpeg" })
+          : item.url,
+      })),
+    );
 
     try {
       const optimizedPrompt = await optimizePromptByRelay({
         model: input.model || settings.promptOptimizerModel,
         prompt: input.prompt,
-        negative: input.negative,
         userMessage: input.userMessage,
-        selectedImageUrl: input.selectedImageUrl,
+        selectedImageUrl,
         referenceImageUrls: input.referenceImageUrls,
-        referenceImages: input.referenceImages,
+        referenceImages,
         conversation: input.conversation,
       });
 

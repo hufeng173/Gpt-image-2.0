@@ -30,7 +30,7 @@ const SETTINGS_FILE = path.join(process.cwd(), "data", "settings.json");
 
 function normalizeSettings(value: Partial<AppSettings>): AppSettings {
   const maxConcurrentGenerations = Math.min(
-    16,
+    20,
     Math.max(1, Number(value.maxConcurrentGenerations || DEFAULT_SETTINGS.maxConcurrentGenerations)),
   );
 

@@ -776,7 +776,9 @@ textarea {
   background: rgba(20, 24, 20, .22);
   backdrop-filter: blur(4px);
   display: grid;
-  place-items: center;
+  place-items: start center;
+  padding: 24px;
+  overflow-y: auto;
   z-index: 20;
 }
 
@@ -1133,4 +1135,613 @@ textarea {
   border-radius: 999px;
   background: rgba(110, 110, 110, 0.08);
   color: #fa8070;
+}
+
+.prompt-optimize-box {
+  margin-top: 14px;
+  border: 1px solid rgba(39, 82, 65, .12);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 255, 255, .52);
+}
+
+.prompt-optimize-box .field-block.compact span {
+  margin-top: 0;
+}
+
+.prompt-actions {
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.prompt-actions .secondary-btn {
+  min-width: 132px;
+}
+
+.prompt-actions .primary-btn {
+  min-width: 132px;
+}
+
+.generation-status {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(55, 107, 86, .08);
+  color: var(--green-dark);
+  font-weight: 700;
+}
+
+.inline-loading {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .66);
+  border: 1px solid rgba(39, 82, 65, .1);
+  color: var(--green-dark);
+  font-weight: 700;
+}
+
+.inline-loading img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.selected-loading {
+  justify-content: center;
+}
+
+.logout-link {
+  margin-top: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--green-dark);
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.access-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: url('/brand/background.png') center/cover no-repeat;
+}
+
+.access-card {
+  width: min(420px, 100%);
+  border: 1px solid rgba(39, 82, 65, .14);
+  border-radius: 30px;
+  padding: 30px 34px 26px;
+  background: rgba(255, 255, 255, .74);
+  box-shadow: 0 30px 90px rgba(42, 38, 32, .18);
+  text-align: center;
+}
+
+.access-card img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+}
+
+.access-card input {
+  width: 100%;
+  border: 1px solid rgba(39, 82, 65, .16);
+  border-radius: 18px;
+  padding: 15px 16px;
+  background: rgba(255, 255, 255, .92);
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.access-card small {
+  display: block;
+  min-height: 22px;
+  margin-top: 12px;
+  color: var(--red);
+  line-height: 1.6;
+}
+
+.access-admin-box {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.settings-panel {
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.access-admin-toggle {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(55, 107, 86, .06);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--green-dark);
+  font-weight: 700;
+}
+
+.access-admin-toggle small {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.access-admin-content {
+  margin-top: 14px;
+}
+
+.access-code-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.access-code-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255, 255, 255, .58);
+}
+
+.access-code-row strong,
+.access-code-row small {
+  display: block;
+}
+
+.access-code-row small {
+  margin-top: 4px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.access-code-row button {
+  border: 1px solid rgba(182, 72, 54, .18);
+  border-radius: 999px;
+  background: rgba(182, 72, 54, .08);
+  color: var(--red);
+  padding: 8px 12px;
+}
+
+.access-code-row button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+@media (max-width: 680px) {
+  .app-shell {
+    min-height: 100dvh;
+    background-attachment: scroll;
+  }
+
+  .sidebar {
+    padding: 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, .72);
+    backdrop-filter: blur(14px);
+  }
+
+  .brand-row {
+    margin-bottom: 10px;
+  }
+
+  .brand-logo {
+    max-width: 132px;
+    max-height: 48px;
+  }
+
+  .brand-en {
+    font-size: 10px;
+    letter-spacing: .12em;
+  }
+
+  .primary-nav,
+  .nav-item {
+    padding: 10px 12px;
+    border-radius: 13px;
+    margin-bottom: 7px;
+    text-align: center;
+  }
+
+  .conversation-list {
+    max-height: 138px;
+    min-height: 0;
+    margin: 8px 0 10px;
+  }
+
+  .conversation-item {
+    margin-bottom: 6px;
+    border-radius: 12px;
+  }
+
+  .conversation-open {
+    padding: 5px 6px;
+  }
+
+  .conversation-delete {
+    width: 26px;
+    height: 26px;
+  }
+
+  .space-card {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .space-card strong {
+    font-size: 14px;
+  }
+
+  .space-card span,
+  .space-card small,
+  .logout-link {
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .meter {
+    display: none;
+  }
+
+  .main-panel {
+    height: auto;
+    overflow: visible;
+    padding: 12px;
+  }
+
+  .topbar {
+    height: auto;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .version-pill,
+  .top-actions {
+    display: none;
+  }
+
+  .mode-switch {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .mode-switch button {
+    flex: 1;
+    padding: 9px 12px;
+  }
+
+  .hero.compact {
+    padding: 10px 0 12px;
+  }
+
+  .hero:before,
+  .seal {
+    display: none;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+    letter-spacing: .04em;
+  }
+
+  .hero p {
+    font-size: 14px;
+    margin: 8px 0 12px;
+    letter-spacing: .08em;
+  }
+
+  .quick-grid {
+    display: flex;
+    grid-template-columns: none;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 2px 2px 8px;
+    scroll-snap-type: x proximity;
+  }
+
+  .quick-card {
+    min-width: 218px;
+    min-height: 96px;
+    padding: 12px;
+    border-radius: 16px;
+    scroll-snap-align: start;
+  }
+
+  .quick-card strong {
+    font-size: 17px;
+  }
+
+  .quick-card span {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .workspace {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .panel {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .panel-head {
+    display: block;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  .panel h2 {
+    font-size: 21px;
+  }
+
+  .panel h3 {
+    margin: 14px 0 8px;
+  }
+
+  .panel p {
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .form-grid,
+  .form-grid.two,
+  .form-grid.three {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .span-two {
+    grid-column: auto;
+  }
+
+  label span,
+  .field-block span {
+    margin: 10px 0 6px;
+  }
+
+  input,
+  select,
+  textarea {
+    border-radius: 13px;
+    padding: 11px 12px;
+    font-size: 16px;
+  }
+
+  textarea {
+    min-height: 96px;
+  }
+
+  .button-row,
+  .prompt-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .primary-btn,
+  .secondary-btn,
+  .prompt-actions .primary-btn,
+  .prompt-actions .secondary-btn {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 16px;
+  }
+
+  .reference-box,
+  .context-box,
+  .selected-dialogue,
+  .prompt-optimize-box {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .reference-head {
+    display: block;
+  }
+
+  .check-line {
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .reference-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .reference-category-card {
+    padding: 9px;
+    border-radius: 14px;
+  }
+
+  .reference-category-card p {
+    min-height: 0;
+    font-size: 11px;
+  }
+
+  .reference-category-title {
+    display: block;
+  }
+
+  .reference-list.small img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .chat-workspace {
+    min-height: auto;
+    display: block;
+  }
+
+  .chat-thread {
+    min-height: 320px;
+    max-height: 56dvh;
+    padding: 12px 0;
+  }
+
+  .bubble {
+    max-width: 92%;
+    padding: 12px;
+    border-radius: 16px;
+    font-size: 14px;
+  }
+
+  .chat-input-row {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .message-images img {
+    width: 86px;
+    height: 86px;
+  }
+
+  .empty-result {
+    min-height: 190px;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .gallery-stage-image-wrap {
+    padding: 8px;
+  }
+
+  .gallery-stage-image {
+    max-height: 420px;
+    border-radius: 12px;
+  }
+
+  .gallery-stage-toolbar {
+    display: block;
+    padding: 10px;
+  }
+
+  .gallery-downloads {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .gallery-downloads button {
+    flex: 1;
+    margin-left: 0;
+  }
+
+  .gallery-thumbs {
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  .gallery-thumbs-head {
+    display: block;
+  }
+
+  .gallery-thumbs-head small {
+    max-width: none;
+    margin-top: 4px;
+  }
+
+  .gallery-thumb-list {
+    display: flex;
+    grid-template-columns: none;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x proximity;
+  }
+
+  .gallery-thumb {
+    min-width: 86px;
+    scroll-snap-align: start;
+  }
+
+  .selected-row {
+    grid-template-columns: 68px 1fr;
+  }
+
+  .selected-row img {
+    width: 68px;
+    height: 68px;
+    border-radius: 13px;
+  }
+
+  .refine-count select {
+    max-width: none;
+  }
+
+  .result-note,
+  .generation-status,
+  .error-line,
+  .warn-line,
+  .inline-loading {
+    font-size: 13px;
+    border-radius: 13px;
+  }
+
+  .inline-loading img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .settings-mask {
+    padding: 10px;
+  }
+
+  .settings-panel {
+    width: 100%;
+    max-height: calc(100dvh - 20px);
+    border-radius: 18px;
+    padding: 16px;
+  }
+
+  .access-code-row {
+    display: block;
+  }
+
+  .access-code-row button {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .access-gate {
+    padding: 14px;
+  }
+
+  .access-card {
+    padding: 24px 18px 20px;
+    border-radius: 22px;
+  }
+
+  .access-card img {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 14px;
+  }
 }

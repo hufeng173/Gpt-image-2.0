@@ -1,5 +1,5 @@
 {
-  "maxConcurrentGenerations": 12,
+  "maxConcurrentGenerations": 8,
   "defaultImageModel": "gpt-image-2",
   "promptOptimizerModel": "gpt-5.4",
   "allowReferenceImageEdit": true,

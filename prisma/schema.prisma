@@ -49,7 +49,35 @@ model Image {
   createdAt DateTime @default(now())
 }
 
+model AccessCode {
+  id           String               @id @default(cuid())
+  label        String
+  codeHash     String               @unique
+  role         AccessRole           @default(USER)
+  createdAt    DateTime             @default(now())
+  lastUsedAt   DateTime?
+  conversations SavedConversation[]
+}
+
+model SavedConversation {
+  id           String     @id
+  accessCodeId String
+  accessCode   AccessCode @relation(fields: [accessCodeId], references: [id])
+  title        String
+  messages     Json
+  createdAt    DateTime
+  updatedAt    DateTime
+
+  @@index([accessCodeId])
+  @@index([updatedAt])
+}
+
 enum UserRole {
+  USER
+  ADMIN
+}
+
+enum AccessRole {
   USER
   ADMIN
 }
@@ -58,5 +86,6 @@ enum JobStatus {
   PENDING
   RUNNING
   SUCCEEDED
+  PARTIAL_SUCCEEDED
   FAILED
 }

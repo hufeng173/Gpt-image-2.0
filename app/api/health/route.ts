@@ -3,12 +3,24 @@ import { prisma } from "@/lib/prisma";
 import { getLimiterSnapshot } from "@/lib/concurrency";
 
 export async function GET() {
-  const imageJobCount = await prisma.imageJob.count();
+  try {
+    const imageJobCount = await prisma.imageJob.count();
 
-  return NextResponse.json({
-    ok: true,
-    database: "connected",
-    imageJobCount,
-    limiter: getLimiterSnapshot(),
-  });
+    return NextResponse.json({
+      ok: true,
+      database: "connected",
+      imageJobCount,
+      limiter: getLimiterSnapshot(),
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        ok: false,
+        database: "disconnected",
+        message: error instanceof Error ? error.message : "数据库连接失败。",
+        limiter: getLimiterSnapshot(),
+      },
+      { status: 503 },
+    );
+  }
 }

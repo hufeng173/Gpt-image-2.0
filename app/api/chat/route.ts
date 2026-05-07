@@ -4,6 +4,8 @@ import { z } from "zod";
 import { chatByRelay, type RelayChatMessage } from "@/lib/ai/relay-provider";
 import { getAppSettings } from "@/lib/settings";
 import { getErrorMessage, getShortErrorReason, getUpstreamStatus } from "@/lib/error-reason";
+import { localImageUrlToDataUrl } from "@/lib/image-files";
+import { requireAccessSession } from "@/lib/access-control";
 
 const ChatMessageSchema = z.object({
   role: z.enum(["user", "assistant"]),
@@ -28,9 +30,13 @@ function buildSystemPrompt(mode: "chat" | "image-assistant") {
 
 export async function POST(request: NextRequest) {
   try {
+    await requireAccessSession(request);
     const body = await request.json();
     const input = ChatSchema.parse(body);
     const settings = await getAppSettings();
+    const selectedImageDataUrl = input.selectedImageUrl?.startsWith("/")
+      ? await localImageUrlToDataUrl(input.selectedImageUrl, { maxEdge: 1024, quality: 82, format: "jpeg" })
+      : input.selectedImageUrl;
 
     const messages: RelayChatMessage[] = [
       {
@@ -43,8 +49,11 @@ export async function POST(request: NextRequest) {
       })),
       {
         role: "user",
-        content: input.selectedImageUrl
-          ? `${input.message}\n\n当前选中图片：${input.selectedImageUrl}`
+        content: selectedImageDataUrl
+          ? [
+              { type: "text", text: input.message },
+              { type: "image_url", image_url: { url: selectedImageDataUrl } },
+            ]
           : input.message,
       },
     ];

@@ -10,15 +10,33 @@ import { generateImageByRelay, editImageByRelay, type RelayImageItem } from "@/l
 import { getAppSettings } from "@/lib/settings";
 import { runWithGenerationLimit } from "@/lib/concurrency";
 import { getErrorMessage, getShortErrorReason, getUpstreamStatus } from "@/lib/error-reason";
+import { assertWritableRequest } from "@/lib/request-guard";
+import { readPreparedLocalImage } from "@/lib/image-files";
+import { requireAccessSession } from "@/lib/access-control";
 
 export const runtime = "nodejs";
 
 const SupportedModelSizes = ["1024x1024", "1024x1536", "1536x1024"] as const;
+const SupportedPresetSizes = [
+  "1920x1080",
+  "2560x1440",
+  "3840x2160",
+  "1080x1920",
+  "1080x1440",
+  "1080x1080",
+  "1440x1080",
+  "800x800",
+  "1000x1000",
+] as const;
 const ReferenceCategorySchema = z.enum(["composition", "color", "material", "lighting", "other"]);
 
 type ReferenceCategory = z.infer<typeof ReferenceCategorySchema>;
 
 const MAX_CUSTOM_IMAGE_SIZE = 10000;
+const MAX_EDIT_REFERENCE_IMAGES = 16;
+const GENERATED_RETENTION_MS = 14 * 24 * 60 * 60 * 1000;
+const GENERATED_CLEANUP_INTERVAL_MS = 60 * 60 * 1000;
+let lastGeneratedCleanup = 0;
 
 const OptionalPositiveInt = z.preprocess(
   (value) => {
@@ -55,7 +73,6 @@ const ReferenceImageSchema = z.object({
 
 const GenerateImageSchema = z.object({
   prompt: z.string().min(2).max(6000),
-  negative: z.string().optional().default(""),
   model: z.string().optional(),
   size: z.string().default("1024x1024"),
   sizeMode: z.enum(["preset", "custom"]).optional(),
@@ -81,6 +98,16 @@ type GeneratedImageResult = {
 type GenerationFailure = {
   index: number;
   reason: string;
+};
+
+type GenerationNote = {
+  index: number;
+  message: string;
+};
+
+type PreparedReferenceBatch = {
+  buffers: Buffer[];
+  note: string | null;
 };
 
 const categoryLabels: Record<ReferenceCategory, string> = {
@@ -132,14 +159,14 @@ function resolveSize(input: z.infer<typeof GenerateImageSchema>) {
     };
   }
 
-  const presetSize = SupportedModelSizes.includes(input.size as (typeof SupportedModelSizes)[number])
-    ? (input.size as (typeof SupportedModelSizes)[number])
-    : "1024x1024";
+  const presetSize = SupportedPresetSizes.includes(input.size as (typeof SupportedPresetSizes)[number])
+    ? input.size
+    : "1920x1080";
 
   const parsed = parseSize(presetSize);
 
   return {
-    modelSize: presetSize,
+    modelSize: chooseBestModelSize(parsed.width, parsed.height),
     targetWidth: parsed.width,
     targetHeight: parsed.height,
     finalSizeText: presetSize,
@@ -198,10 +225,6 @@ function buildPrompt(
 
   parts.push("质量要求：主体清晰、准确对焦、高清细节、边缘清楚、纹理真实、画面干净、层次分明、避免虚焦、避免雾化、避免低清晰度。不要仅依赖负面提示词，请直接正向保证清晰度与细节表现。");
 
-  if (input.negative?.trim()) {
-    parts.push(`Negative prompt: ${input.negative.trim()}`);
-  }
-
   if (input.conversation.length > 0) {
     const recentConversation = input.conversation
       .slice(-10)
@@ -229,7 +252,8 @@ function buildWarnings(params: {
   targetWidth: number;
   targetHeight: number;
   isCustomSize: boolean;
-  hasNegative: boolean;
+  referenceImageCount: number;
+  usesImageEdit: boolean;
 }) {
   const warnings: string[] = [];
 
@@ -237,17 +261,29 @@ function buildWarnings(params: {
     warnings.push("当前自定义尺寸较小，放大查看时容易显得模糊。若希望更清晰，建议提高尺寸后再生成。");
   }
 
-  if (params.hasNegative) {
-    warnings.push("提示：仅写负面提示词通常不足以显著提升清晰度，主提示词里也建议明确加入主体清晰、准确对焦、高清细节等正向描述。");
+  if (params.referenceImageCount > MAX_EDIT_REFERENCE_IMAGES) {
+    warnings.push(`参考图最多传入前 ${MAX_EDIT_REFERENCE_IMAGES} 张给模型，其余只作为文字提示。`);
+  }
+
+  if (params.referenceImageCount > 0 && !params.usesImageEdit) {
+    warnings.push("当前模型或设置未启用图片编辑接口，参考图只会作为提示词文本辅助。建议使用支持多图编辑的图片模型。");
   }
 
   return warnings;
 }
 
+function canUseImageEdit(params: {
+  selectedImageUrl?: string;
+  referenceImages: Array<{ category: ReferenceCategory; url: string; name?: string }>;
+  allowReferenceImageEdit: boolean;
+}) {
+  return params.allowReferenceImageEdit && (Boolean(params.selectedImageUrl) || params.referenceImages.length > 0);
+}
+
 async function imageUrlToBuffer(imageUrl: string) {
   if (imageUrl.startsWith("/")) {
-    const localPath = path.join(process.cwd(), "public", imageUrl.replace(/^\//, ""));
-    return sharp(localPath).png().toBuffer();
+    const image = await readPreparedLocalImage(imageUrl, { maxEdge: 1536, quality: 90, format: "png" });
+    return image.buffer;
   }
 
   const response = await fetch(imageUrl);
@@ -261,6 +297,78 @@ async function relayImageToBuffer(item: RelayImageItem) {
   if (item.b64_json) return Buffer.from(item.b64_json, "base64");
   if (item.url) return imageUrlToBuffer(item.url);
   throw new Error("模型没有返回有效图片。");
+}
+
+async function readEditReferenceBuffers(params: {
+  selectedImageUrl?: string;
+  referenceImages: Array<{ category: ReferenceCategory; url: string; name?: string }>;
+}) {
+  const urls = [
+    ...(params.selectedImageUrl ? [params.selectedImageUrl] : []),
+    ...params.referenceImages.map((item) => item.url),
+  ];
+
+  const uniqueUrls = Array.from(new Set(urls)).slice(0, MAX_EDIT_REFERENCE_IMAGES);
+  return Promise.all(uniqueUrls.map((url) => imageUrlToBuffer(url)));
+}
+
+async function prepareReferenceBatch(params: {
+  selectedImageUrl?: string;
+  referenceImages: Array<{ category: ReferenceCategory; url: string; name?: string }>;
+}) : Promise<PreparedReferenceBatch> {
+  const urls = [
+    ...(params.selectedImageUrl ? [params.selectedImageUrl] : []),
+    ...params.referenceImages.map((item) => item.url),
+  ];
+
+  const uniqueUrls = Array.from(new Set(urls)).slice(0, MAX_EDIT_REFERENCE_IMAGES);
+  if (uniqueUrls.length === 0) {
+    return { buffers: [], note: null };
+  }
+
+  const buffers = await Promise.all(uniqueUrls.map((url) => imageUrlToBuffer(url)));
+  return {
+    buffers,
+    note: uniqueUrls.length > 1 ? `已复用 ${uniqueUrls.length} 张参考图缓存用于后续批量生成。` : null,
+  };
+}
+
+async function cleanupGeneratedImages() {
+  const now = Date.now();
+  if (now - lastGeneratedCleanup < GENERATED_CLEANUP_INTERVAL_MS) return;
+  lastGeneratedCleanup = now;
+
+  try {
+    const expiredImages = await prisma.image.findMany({
+      where: {
+        createdAt: {
+          lt: new Date(now - GENERATED_RETENTION_MS),
+        },
+      },
+      select: {
+        id: true,
+        url: true,
+      },
+      take: 200,
+    });
+
+    await Promise.all(expiredImages.map(async (image) => {
+      try {
+        if (image.url.startsWith("/api/generated/")) {
+          const filename = image.url.split("/").pop()?.split("?")[0];
+          if (filename && !filename.includes("..") && !filename.includes("/") && !filename.includes("\\")) {
+            await import("node:fs/promises").then(({ unlink }) =>
+              unlink(path.join(process.cwd(), "data", "generated", filename)).catch(() => undefined),
+            );
+          }
+        }
+      } finally {
+        await prisma.image.delete({ where: { id: image.id } }).catch(() => undefined);
+      }
+    }));
+  } catch {
+    // Cleanup is best effort and must not block generation.
+  }
 }
 
 async function saveFinalImage(params: {
@@ -297,36 +405,61 @@ async function generateOneImage(params: {
   model: string;
   prompt: string;
   selectedImageUrl?: string;
+  referenceImages: Array<{ category: ReferenceCategory; url: string; name?: string }>; 
   allowReferenceImageEdit: boolean;
   modelSize: (typeof SupportedModelSizes)[number];
-}) {
-  if (params.selectedImageUrl && params.allowReferenceImageEdit) {
+  preparedReferences?: Buffer[];
+}): Promise<{ images: RelayImageItem[]; fallbackWarning: string | null }> {
+  if (canUseImageEdit(params)) {
     try {
-      const selectedImageBuffer = await imageUrlToBuffer(params.selectedImageUrl);
-      return await editImageByRelay({
+      const referenceBuffers = params.preparedReferences || await readEditReferenceBuffers({
+        selectedImageUrl: params.selectedImageUrl,
+        referenceImages: params.referenceImages,
+      });
+
+      return {
+        images: await editImageByRelay({
+          model: params.model,
+          prompt: params.prompt,
+          imageBuffers: referenceBuffers,
+          size: params.modelSize,
+          count: 1,
+        }),
+        fallbackWarning: null,
+      };
+    } catch (error) {
+      console.warn("IMAGE_EDIT_FALLBACK_TO_GENERATE:", error);
+      const fallbackImages = await generateImageByRelay({
         model: params.model,
         prompt: params.prompt,
-        imageBuffer: selectedImageBuffer,
         size: params.modelSize,
         count: 1,
       });
-    } catch (error) {
-      console.warn("IMAGE_EDIT_FALLBACK_TO_GENERATE:", error);
+
+      return {
+        images: fallbackImages,
+        fallbackWarning: `图片编辑接口失败，已自动改用纯文本生成。原因：${getShortErrorReason(error)}`,
+      };
     }
   }
 
-  return generateImageByRelay({
-    model: params.model,
-    prompt: params.prompt,
-    size: params.modelSize,
-    count: 1,
-  });
+  return {
+    images: await generateImageByRelay({
+      model: params.model,
+      prompt: params.prompt,
+      size: params.modelSize,
+      count: 1,
+    }),
+    fallbackWarning: null,
+  };
 }
 
 export async function POST(request: NextRequest) {
   let jobId: string | null = null;
 
   try {
+    assertWritableRequest(request);
+    await requireAccessSession(request);
     const body = await request.json();
     const input = GenerateImageSchema.parse(body);
     const settings = await getAppSettings();
@@ -334,22 +467,29 @@ export async function POST(request: NextRequest) {
     const model = input.model || settings.defaultImageModel || process.env.AI_IMAGE_MODEL || "gpt-image-2";
     const resolvedSize = resolveSize(input);
     const referenceImages = normalizeReferenceImages(input);
+    const usesImageEdit = canUseImageEdit({
+      selectedImageUrl: input.selectedImageUrl,
+      referenceImages,
+      allowReferenceImageEdit: settings.allowReferenceImageEdit,
+    });
     const mergedPrompt = buildPrompt(input, resolvedSize.finalSizeText, referenceImages);
     const warnings = buildWarnings({
       targetWidth: resolvedSize.targetWidth,
       targetHeight: resolvedSize.targetHeight,
       isCustomSize: resolvedSize.isCustomSize,
-      hasNegative: Boolean(input.negative?.trim()),
+      referenceImageCount: referenceImages.length,
+      usesImageEdit,
     });
 
-    const safeConcurrency = Math.max(1, Math.min(settings.maxConcurrentGenerations || 8, 16));
+    void cleanupGeneratedImages();
+
+    const safeConcurrency = Math.max(1, Math.min(settings.maxConcurrentGenerations || 8, 20));
     const requestedCount = Math.max(1, Math.min(input.count, 12));
 
     const job = await prisma.imageJob.create({
       data: {
         model,
         prompt: input.prompt,
-        negative: input.negative || null,
         size: resolvedSize.finalSizeText,
         count: requestedCount,
         status: "RUNNING",
@@ -359,21 +499,34 @@ export async function POST(request: NextRequest) {
     jobId = job.id;
 
     const failures: GenerationFailure[] = [];
+    const notes: GenerationNote[] = [];
     const savedImages: GeneratedImageResult[] = [];
+    const preparedReferences = usesImageEdit
+      ? (await prepareReferenceBatch({
+          selectedImageUrl: input.selectedImageUrl,
+          referenceImages,
+        })).buffers
+      : [];
 
     await Promise.all(
       Array.from({ length: requestedCount }, async (_, index) => {
         try {
-          const imageResult = await runWithGenerationLimit(safeConcurrency, async () => {
-            const relayImages = await generateOneImage({
+          const queuedResult = await runWithGenerationLimit(safeConcurrency, async () => {
+            const generation = await generateOneImage({
               model,
               prompt: mergedPrompt,
               selectedImageUrl: input.selectedImageUrl,
+              referenceImages,
               allowReferenceImageEdit: settings.allowReferenceImageEdit,
               modelSize: resolvedSize.modelSize,
+              preparedReferences,
             });
 
-            const firstImage = relayImages[0];
+            if (generation.fallbackWarning) {
+              notes.push({ index: index + 1, message: generation.fallbackWarning });
+            }
+
+            const firstImage = generation.images[0];
             if (!firstImage) throw new Error("模型没有返回图片。");
 
             const sourceBuffer = await relayImageToBuffer(firstImage);
@@ -403,7 +556,14 @@ export async function POST(request: NextRequest) {
             };
           });
 
-          savedImages[index] = imageResult;
+          savedImages[index] = queuedResult.result;
+
+          if (queuedResult.queued) {
+            notes.push({
+              index: index + 1,
+              message: `已进入队列，前面还有 ${queuedResult.waitingAhead} 个任务。预计等待 ${Math.max(1, Math.round(queuedResult.waitMs / 1000))} 秒后执行。`,
+            });
+          }
         } catch (error) {
           failures.push({
             index: index + 1,
@@ -422,7 +582,7 @@ export async function POST(request: NextRequest) {
     await prisma.imageJob.update({
       where: { id: job.id },
       data: {
-        status: failures.length > 0 ? "FAILED" : "SUCCEEDED",
+        status: failures.length > 0 ? "PARTIAL_SUCCEEDED" : "SUCCEEDED",
         errorMessage: failures.length > 0 ? `部分生成失败：${failures.map((item) => `第${item.index}张 ${item.reason}`).join("；")}` : null,
         rawResponse: {
           model,
@@ -435,6 +595,7 @@ export async function POST(request: NextRequest) {
           selectedImageUrl: input.selectedImageUrl || null,
           images: successfulImages,
           failures,
+          notes,
           warnings,
         },
         finishedAt: new Date(),
@@ -452,8 +613,12 @@ export async function POST(request: NextRequest) {
       generatedCount: successfulImages.length,
       images: successfulImages,
       failures,
+      notes,
       warnings: [
         ...warnings,
+        ...notes
+          .filter((item) => !item.message.includes("开始生成"))
+          .map((item) => `第${item.index}张：${item.message}`),
         ...(failures.length > 0 ? ["部分图片生成失败，已保留成功结果。"] : []),
       ],
     });
@@ -471,6 +636,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const status = getErrorMessage(error).includes("无权") || getErrorMessage(error).includes("跨站") ? 403 : 502;
+
     return NextResponse.json(
       {
         ok: false,
@@ -479,7 +646,7 @@ export async function POST(request: NextRequest) {
         shortReason: getShortErrorReason(error),
         upstreamStatus: getUpstreamStatus(error),
       },
-      { status: 502 },
+      { status },
     );
   }
 }
