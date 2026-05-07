@@ -14,7 +14,10 @@ export async function DELETE(request: NextRequest, context: { params: Promise<{ 
       );
     }
 
-    await prisma.accessCode.delete({ where: { id } });
+    await prisma.$transaction([
+      prisma.savedConversation.deleteMany({ where: { accessCodeId: id } }),
+      prisma.accessCode.delete({ where: { id } }),
+    ]);
     return NextResponse.json({ ok: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : "删除口令失败。";
