@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
       select: {
         id: true,
         label: true,
+        displayCode: true,
         role: true,
         createdAt: true,
         lastUsedAt: true,
@@ -39,11 +40,13 @@ export async function POST(request: NextRequest) {
       data: {
         label: input.label.trim(),
         codeHash: hashAccessCode(input.code),
+        displayCode: input.code.trim(),
         role: input.role,
       },
       select: {
         id: true,
         label: true,
+        displayCode: true,
         role: true,
         createdAt: true,
         lastUsedAt: true,

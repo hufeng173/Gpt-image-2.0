@@ -64,6 +64,7 @@ type AccessSession = {
 type AccessCodeItem = {
   id: string;
   label: string;
+  displayCode?: string | null;
   role: "USER" | "ADMIN";
   createdAt: string;
   lastUsedAt: string | null;
@@ -1408,6 +1409,7 @@ export default function Home() {
                           <div key={item.id} className="access-code-row">
                             <div>
                               <strong>{item.label}</strong>
+                              <small>口令：{item.displayCode || "旧口令不可查看"}</small>
                               <small>{item.role === "ADMIN" ? "管理员" : "普通用户"} · 对话 {item._count?.conversations || 0} 个{item.lastUsedAt ? ` · 最近使用 ${new Date(item.lastUsedAt).toLocaleString("zh-CN")}` : ""}</small>
                             </div>
                             <button type="button" onClick={() => void deleteAccessCode(item.id)} disabled={item.id === accessSession?.id}>删除</button>

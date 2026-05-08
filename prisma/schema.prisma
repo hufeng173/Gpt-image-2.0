@@ -53,6 +53,7 @@ model AccessCode {
   id           String               @id @default(cuid())
   label        String
   codeHash     String               @unique
+  displayCode  String?
   role         AccessRole           @default(USER)
   createdAt    DateTime             @default(now())
   lastUsedAt   DateTime?

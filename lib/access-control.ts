@@ -78,6 +78,7 @@ export async function ensureDefaultAccessCode() {
     data: {
       label: "默认管理员",
       codeHash: hashAccessCode(DEFAULT_ADMIN_CODE),
+      displayCode: DEFAULT_ADMIN_CODE,
       role: "ADMIN",
     },
   });
