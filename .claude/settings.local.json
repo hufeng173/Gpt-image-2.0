@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:skills.sh)",
+      "WebFetch(domain:www.tsinghua.edu.cn)"
+    ]
+  }
+}
