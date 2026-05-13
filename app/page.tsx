@@ -1,5 +1,22 @@
 "use client";
 
+import {
+  Bell,
+  FileText,
+  ImageIcon,
+  LayoutDashboard,
+  Library,
+  MessageSquare,
+  PanelLeft,
+  Plus,
+  Search,
+  Send,
+  Settings,
+  Upload,
+  User,
+  WandSparkles,
+  X,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 
@@ -120,6 +137,8 @@ type ConversationsResult = {
   message?: string;
 };
 
+type WorkspaceMode = "dashboard" | "chat" | "draw" | "assets";
+
 const storageKey = "taijitu.conversations.v4";
 
 const fallbackSettings: AppSettings = {
@@ -136,24 +155,41 @@ const fallbackSettings: AppSettings = {
 const quickCards = [
   {
     title: "图片生成",
-    desc: "根据提示词、分类参考图与模型参数生成图像，支持多张输出和自定义尺寸",
+    eyebrow: "Image",
+    desc: "生成高质量的图片资产",
     prompt: "一张东方美学品牌主视觉，留白构图，温润松绿色，淡墨山水背景，高级商业质感",
-  },
-  {
-    title: "提示词构建",
-    desc: "从简单想法生成结构化提示词，补全主体、风格、构图、材质与光线细节",
-    prompt: "请帮我构建一个适合 AI 作图的高质量提示词，主题是东方美学科技产品海报。",
-  },
-  {
-    title: "创意扩展",
-    desc: "能够基于当前对话和目标生成多方向创意方案，快速探索不同视觉可能性",
-    prompt: "围绕太极图、东方审美、AI 创作工作台，给我 6 个视觉创意方向。",
+    mode: "draw" as WorkspaceMode,
   },
   {
     title: "提示词优化",
-    desc: "结合历史对话、选中图片与分类参考图，提升提示词稳定性和出图质量",
-    prompt: "请把当前提示词优化成更适合高质量图片生成的版本。",
+    eyebrow: "Prompt",
+    desc: "优化创意，提升质量",
+    prompt: "请帮我构建一个适合 AI 作图的高质量提示词，主题是东方美学科技产品海报。",
+    mode: "chat" as WorkspaceMode,
   },
+  {
+    title: "附件理解",
+    eyebrow: "Files",
+    desc: "上传资料，提炼素材",
+    prompt: "请基于附件或素材，提炼适合作图的主题、风格、色彩和构图要点。",
+    mode: "assets" as WorkspaceMode,
+  },
+  {
+    title: "对话",
+    eyebrow: "Chat",
+    desc: "与 AI 对话，激发创意",
+    prompt: "围绕太极图、东方审美、AI 创作工作台，给我 6 个视觉创意方向。",
+    mode: "chat" as WorkspaceMode,
+  },
+];
+
+const inspirationTags = ["山水意境海报", "水墨写意插画", "东方控梦场景", "诗意留白构图", "品牌视觉延展"];
+
+const sampleAssets = [
+  { name: "山水参考图.jpg", type: "image", size: "2.4MB" },
+  { name: "品牌文档.pdf", type: "pdf", size: "1.8MB" },
+  { name: "产品资料.docx", type: "doc", size: "1.2MB" },
+  { name: "色彩参考.xlsx", type: "sheet", size: "0.9MB" },
 ];
 
 const referenceCategories: Array<{
@@ -298,7 +334,7 @@ function serializeRecentMessages(messages: ApiConversationMessage[], limit = 20)
 export default function Home() {
   const [settings, setSettings] = useState<AppSettings>(fallbackSettings);
   const [showSettings, setShowSettings] = useState(false);
-  const [mode, setMode] = useState<"chat" | "draw">("draw");
+  const [mode, setMode] = useState<WorkspaceMode>("dashboard");
   const [prompt, setPrompt] = useState(defaultPrompt);
   const [model, setModel] = useState("gpt-image-2");
   const [sizeMode, setSizeMode] = useState<"preset" | "custom">("preset");
@@ -1021,102 +1057,285 @@ export default function Home() {
           </div>
         </div>
 
-        <button className="primary-nav" type="button" onClick={createNewConversation}>新对话</button>
+        <button className="primary-nav" type="button" onClick={createNewConversation}>
+          <Plus size={17} />
+          <span>新对话</span>
+        </button>
 
-        <div className="conversation-list">
-          {conversations.map((conversation) => (
-            <div
-              key={conversation.id}
-              className={`conversation-item ${activeConversationId === conversation.id ? "active" : ""}`}
-            >
-              <button
-                className="conversation-open"
-                type="button"
-                onClick={() => {
-                  setActiveConversationId(conversation.id);
-                  setMode("chat");
-                }}
-              >
-                <span>{conversation.title}</span>
-                <small>{conversation.messages.length} 条{isAdmin && conversation.ownerLabel ? ` · ${conversation.ownerLabel}` : ""}</small>
-              </button>
+        <nav className="side-nav" aria-label="主导航">
+          <button className={`nav-item ${mode === "dashboard" ? "active" : ""}`} type="button" onClick={() => setMode("dashboard")}>
+            <LayoutDashboard size={17} />
+            <span>工作台</span>
+          </button>
+          <button className={`nav-item ${mode === "chat" ? "active" : ""}`} type="button" onClick={() => setMode("chat")}>
+            <MessageSquare size={17} />
+            <span>对话</span>
+          </button>
+          <button className={`nav-item ${mode === "draw" ? "active" : ""}`} type="button" onClick={() => setMode("draw")}>
+            <ImageIcon size={17} />
+            <span>图片生成</span>
+          </button>
+          <button className={`nav-item ${mode === "assets" ? "active" : ""}`} type="button" onClick={() => setMode("assets")}>
+            <Library size={17} />
+            <span>素材库</span>
+          </button>
+          {isAdmin ? (
+            <button className="nav-item" type="button" onClick={() => { setShowSettings(true); void loadAccessCodes(); }}>
+              <Settings size={17} />
+              <span>设置</span>
+            </button>
+          ) : null}
+        </nav>
 
-              <button
-                className="conversation-delete"
-                type="button"
-                title="删除对话"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  deleteConversation(conversation.id);
-                }}
+        <div className="conversation-block">
+          <div className="side-section-title">今天</div>
+          <div className="conversation-list">
+            {conversations.slice(0, 6).map((conversation) => (
+              <div
+                key={conversation.id}
+                className={`conversation-item ${activeConversationId === conversation.id ? "active" : ""}`}
               >
-                ×
-              </button>
-            </div>
-          ))}
+                <button
+                  className="conversation-open"
+                  type="button"
+                  onClick={() => {
+                    setActiveConversationId(conversation.id);
+                    setMode("chat");
+                  }}
+                >
+                  <span>{conversation.title}</span>
+                  <small>{conversation.messages.length} 条{isAdmin && conversation.ownerLabel ? ` · ${conversation.ownerLabel}` : ""}</small>
+                </button>
+
+                <button
+                  className="conversation-delete"
+                  type="button"
+                  title="删除对话"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    deleteConversation(conversation.id);
+                  }}
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-
-        <button className="nav-item" type="button" onClick={() => setMode("draw")}>工作台</button>
-        {isAdmin ? <button className="nav-item" type="button" onClick={() => { setShowSettings(true); void loadAccessCodes(); }}>设置</button> : null}
 
         <div className="space-card">
           <strong>EastWill 空间</strong>
           <span>EW·{accessSession?.label || "未登录"}</span>
           <button type="button" className="logout-link" onClick={() => void logoutAccess()}>退出口令</button>
           <div className="meter"><i /></div>
+          <small>灵感容量</small>
         </div>
       </aside>
 
       <section className="main-panel">
         <header className="topbar">
-          <button className="version-pill" type="button">● 太极图1.0</button>
-          <div className="mode-switch">
-            <button type="button" className={mode === "chat" ? "active" : ""} onClick={() => setMode("chat")}>对话</button>
-            <button type="button" className={mode === "draw" ? "active" : ""} onClick={() => setMode("draw")}>作图</button>
-          </div>
+          <button className="version-pill" type="button" onClick={() => setMode("dashboard")}>
+            <PanelLeft size={16} />
+            <span>太极图 1.0</span>
+          </button>
+          <label className="search-box">
+            <Search size={16} />
+            <input placeholder="搜索对话、素材、提示词..." />
+          </label>
           <div className="top-actions">
-            <button type="button">⌕</button>
-            <button type="button">□</button>
-            <button type="button">⌂</button>
+            <button type="button" title="通知"><Bell size={17} /></button>
+            <button type="button" title="账户"><User size={17} /></button>
             <img src="/brand/seal.png" alt="印章" onError={hideBrokenImage} />
           </div>
         </header>
 
-        <section className="hero compact">
-          <img className="seal" src="/brand/seal.png" alt="印章" onError={hideBrokenImage} />
-          <h1>太极图</h1>
-          <p>以平衡之道，组织审美与灵感</p>
-          <div className="quick-grid">
-            {quickCards.map((card) => (
-              <button
-                key={card.title}
-                className="quick-card"
-                type="button"
-                onClick={() => {
-                  if (card.prompt) setPrompt(card.prompt);
-                  setMode(card.title === "图片生成" ? "draw" : "chat");
-                  if (card.title !== "图片生成") setChatDraft(card.prompt);
-                }}
-              >
-                <strong>{card.title}</strong>
-                <span>{card.desc}</span>
-                
-              </button>
-            ))}
-          </div>
-        </section>
+        {mode === "dashboard" ? (
+          <section className="dashboard-page">
+            <section className="welcome-band">
+              <div>
+                <span>欢迎回来，{accessSession?.label || "EastWill"}</span>
+                <h1>以东方美学为灵感，智能驱动创意落地。</h1>
+              </div>
+            </section>
 
-        {mode === "chat" ? (
+            <div className="capability-grid">
+              {quickCards.map((card) => (
+                <button
+                  key={card.title}
+                  className="capability-card"
+                  type="button"
+                  onClick={() => {
+                    if (card.prompt) setPrompt(card.prompt);
+                    setMode(card.mode);
+                    if (card.mode === "chat") setChatDraft(card.prompt);
+                    if (card.mode === "assets") setContextDraft(card.prompt);
+                  }}
+                >
+                  {card.title === "对话" ? <MessageSquare size={28} /> : null}
+                  {card.title === "附件理解" ? <FileText size={28} /> : null}
+                  {card.title === "提示词优化" ? <WandSparkles size={28} /> : null}
+                  {card.title === "图片生成" ? <ImageIcon size={28} /> : null}
+                  <strong>{card.title}</strong>
+                  <span>{card.desc}</span>
+                </button>
+              ))}
+            </div>
+
+            <section className="dashboard-grid">
+              <article className="dashboard-panel recent-panel">
+                <div className="panel-title-row">
+                  <div>
+                    <h2>近期对话</h2>
+                    <p>继续推进未完成的创意线索。</p>
+                  </div>
+                  <button type="button" onClick={() => setMode("chat")}>查看全部</button>
+                </div>
+                <div className="recent-list">
+                  {conversations.slice(0, 4).map((conversation) => (
+                    <button key={conversation.id} type="button" onClick={() => { setActiveConversationId(conversation.id); setMode("chat"); }}>
+                      <strong>{conversation.title}</strong>
+                      <small>{conversation.messages.length} 条消息 · {new Date(conversation.updatedAt).toLocaleDateString("zh-CN")}</small>
+                    </button>
+                  ))}
+                </div>
+              </article>
+
+              <article className="dashboard-panel asset-panel">
+                <div className="panel-title-row">
+                  <div>
+                    <h2>素材中心</h2>
+                    <p>图片、文档和表格会被整理成创作要点。</p>
+                  </div>
+                  <button type="button" onClick={() => setMode("assets")}>查看更多素材</button>
+                </div>
+                <div className="asset-grid">
+                  {(referenceImages.length ? referenceImages : sampleAssets).slice(0, 6).map((item) => (
+                    <div key={"url" in item ? item.url : item.name} className="asset-tile">
+                      {"url" in item ? <img src={normalizeLocalUrl(item.url)} alt={item.name} /> : <FileText size={28} />}
+                      <strong>{item.name}</strong>
+                      <small>{"size" in item ? item.size : ""}</small>
+                    </div>
+                  ))}
+                </div>
+              </article>
+
+              <article className="dashboard-panel latest-panel">
+                <div className="panel-title-row">
+                  <div>
+                    <h2>最新生成</h2>
+                    <p>保留最近的视觉结果，便于回看和二次优化。</p>
+                  </div>
+                  <button type="button" onClick={() => setMode("draw")}>查看全部结果</button>
+                </div>
+                {generatedImages.length ? (
+                  <div className="latest-grid">
+                    {generatedImages.slice(0, 4).map((image) => (
+                      <button key={image.id} type="button" onClick={() => { setSelectedImage(image); setMode("draw"); }}>
+                        <img src={normalizeLocalUrl(image.url)} alt="最新生成" />
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-mini">
+                    <img src="/brand/background.png" alt="默认背景" onError={hideBrokenImage} />
+                    <span>生成后的图片会出现在这里。</span>
+                  </div>
+                )}
+              </article>
+            </section>
+
+            <section className="inspiration-strip">
+              <div>
+                <strong>灵感推荐</strong>
+                <span>换一批</span>
+              </div>
+              <div className="tag-row">
+                {inspirationTags.map((tag) => (
+                  <button key={tag} type="button" onClick={() => { setPrompt(tag); setMode("draw"); }}>{tag}</button>
+                ))}
+              </div>
+            </section>
+          </section>
+        ) : mode === "assets" ? (
+          <section className="assets-page">
+            <section className="asset-hero panel">
+              <div>
+                <h1>附件与解析</h1>
+                <p>上传图片作为风格、构图、材质和光线参考，再把提炼后的要点送入作图流程。</p>
+              </div>
+              <div className="analysis-score">
+                <strong>{referenceImages.length}</strong>
+                <span>已载入素材</span>
+              </div>
+            </section>
+
+            <section className="asset-workflow panel">
+              <h2>素材脉络</h2>
+              <div className="workflow-line">
+                {["资料导入", "内容解析", "要点整合", "提示词优化", "图像生成"].map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+              <div className="reference-category-grid">
+                {referenceCategories.map((category) => (
+                  <div key={category.id} className="reference-category-card">
+                    <div className="reference-category-title">
+                      <strong>{category.title}</strong>
+                      <small>{references[category.id].length}/{category.max}</small>
+                    </div>
+                    <p>{category.desc}</p>
+                    <label className="upload-btn compact">
+                      <Upload size={14} />
+                      {uploading === category.id ? "上传中..." : "上传"}
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        multiple
+                        disabled={uploading === category.id || references[category.id].length >= category.max}
+                        onChange={(event) => void uploadReferences(category.id, event)}
+                      />
+                    </label>
+                    <div className="reference-list small">
+                      {references[category.id].map((item) => (
+                        <button key={item.url} type="button" onClick={() => removeReference(category.id, item.url)} title="点击移除">
+                          <img src={normalizeLocalUrl(item.url)} alt={item.name} />
+                          <span>移除</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="dialogue-card panel">
+              <h2>对话与命令</h2>
+              <p>已为你生成附件解析提示词，可继续补充业务目标。</p>
+              <textarea value={contextDraft} placeholder="输入你的创作目标，或让太极图提炼附件内容..." onChange={(event) => setContextDraft(event.target.value)} />
+              <div className="button-row">
+                <button className="secondary-btn" type="button" onClick={() => { setChatDraft(contextDraft || "请解析当前素材，并输出可用于图片生成的主题、风格、色彩和构图要点。"); setMode("chat"); }}>
+                  <MessageSquare size={16} /> 进入对话
+                </button>
+                <button className="primary-btn" type="button" onClick={() => { setPrompt(contextDraft || prompt || quickCards[0].prompt); setMode("draw"); }}>
+                  <ImageIcon size={16} /> 去生成图片
+                </button>
+              </div>
+            </section>
+          </section>
+        ) : mode === "chat" ? (
           <section className="chat-workspace panel">
             <div className="panel-head">
               <div>
                 <h2>{activeConversation?.title || "新对话"}</h2>
-                <p>使用 {settings.promptOptimizerModel} 进行上下文对话，也可以让它辅助构建作图提示词。</p>
+                <p>Chat-first 统一工作区：对话、附件和作图意图在同一条上下文里沉淀。</p>
               </div>
+              <button className="secondary-btn" type="button" onClick={() => setMode("draw")}>
+                <ImageIcon size={16} /> 分屏作图
+              </button>
             </div>
             <div className="chat-thread">
               {activeMessages.length === 0 ? (
-                <div className="empty-chat">开始新的对话。你可以直接提问，也可以让太极图帮你构思图片。</div>
+                <div className="empty-chat">开始新的对话。可以直接说目标，也可以把素材和生成意图一起交给太极图。</div>
               ) : null}
               {activeMessages.map((message) => (
                 <article key={message.id} className={`chat-message ${message.role}`}>
@@ -1154,18 +1373,24 @@ export default function Home() {
                   }
                 }}
               />
-              <button className="primary-btn" type="button" disabled={chatLoading || !chatDraft.trim()} onClick={sendChat}>发送</button>
+              <button className="primary-btn icon-btn-text" type="button" disabled={chatLoading || !chatDraft.trim()} onClick={sendChat}>
+                <Send size={16} /> 发送
+              </button>
             </div>
           </section>
         ) : (
-          <section className="workspace">
+          <section className="workspace creation-cockpit">
             <section className="panel composer-panel">
               <div className="panel-head">
                 <div>
-                  <h2>AI 作图工作台</h2>
-                  <p>支持分类参考图、多张生成、上下文优化、选中图片单独对话优化。</p>
+                  <h2>分屏创作驾驶舱</h2>
+                  <p>左侧沉淀意图与素材，右侧实时承接生成结果和二次优化。</p>
                 </div>
-                {isAdmin ? <button className="secondary-btn" type="button" onClick={() => { setShowSettings(true); void loadAccessCodes(); }}>设置</button> : null}
+                {isAdmin ? (
+                  <button className="secondary-btn icon-btn-text" type="button" onClick={() => { setShowSettings(true); void loadAccessCodes(); }}>
+                    <Settings size={16} /> 设置
+                  </button>
+                ) : null}
               </div>
 
               <div className="form-grid two">
@@ -1196,8 +1421,12 @@ export default function Home() {
                   <textarea value={contextDraft} placeholder="例如：更像宋代山水，画面更留白，品牌感更强..." onChange={(event) => setContextDraft(event.target.value)} />
                 </label>
                 <div className="button-row prompt-actions">
-                  <button className="secondary-btn" type="button" disabled={promptOptimizing || imageOptimizing || loading} onClick={optimizePrompt}>{promptOptimizing ? "优化中..." : "优化提示词"}</button>
-                  <button className="primary-btn" type="button" disabled={loading || !prompt.trim()} onClick={() => void generateImages()}>{mainGenerating ? "生成中..." : "开始生成"}</button>
+                  <button className="secondary-btn icon-btn-text" type="button" disabled={promptOptimizing || imageOptimizing || loading} onClick={optimizePrompt}>
+                    <WandSparkles size={16} /> {promptOptimizing ? "优化中..." : "优化提示词"}
+                  </button>
+                  <button className="primary-btn icon-btn-text" type="button" disabled={loading || !prompt.trim()} onClick={() => void generateImages()}>
+                    <ImageIcon size={16} /> {mainGenerating ? "生成中..." : "生成图片"}
+                  </button>
                 </div>
                 {(promptOptimizing || mainGenerating) ? (
                   <div className="inline-loading">
@@ -1281,6 +1510,11 @@ export default function Home() {
                 <h3>上下文对话</h3>
                 <p>当前对话会作为作图上下文。</p>
                 <div className="generation-status">{buildGenerationStatus(result, loading, generationTargetCount, generationProgress)}</div>
+                <div className="tag-row compact">
+                  {inspirationTags.slice(0, 4).map((tag) => (
+                    <button key={tag} type="button" onClick={() => setPrompt(`${prompt ? `${prompt}\n` : ""}${tag}`)}>{tag}</button>
+                  ))}
+                </div>
               </section>
 
               {error ? <div className="error-line">{error}</div> : null}
@@ -1290,8 +1524,12 @@ export default function Home() {
             <section className="panel result-panel">
               <div className="panel-head">
                 <div>
-                  <h2>生成结果</h2>
-                  <p>点击图片可选中，并进行单图对话优化。</p>
+                  <h2>生成画布</h2>
+                  <p>点击图片选中，继续进行单图对话优化。</p>
+                </div>
+                <div className="canvas-actions">
+                  <button type="button" title="网格视图"><LayoutDashboard size={16} /></button>
+                  <button type="button" title="素材库" onClick={() => setMode("assets")}><Library size={16} /></button>
                 </div>
               </div>
 
