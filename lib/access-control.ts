@@ -1,7 +1,18 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
-import type { AccessCode, AccessRole } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+
+type AccessRole = "USER" | "ADMIN";
+
+type AccessCodeRecord = {
+  id: string;
+  label: string;
+  codeHash: string;
+  displayCode: string | null;
+  role: AccessRole;
+  createdAt: Date;
+  lastUsedAt: Date | null;
+};
 
 export type AccessSession = {
   id: string;
@@ -84,7 +95,7 @@ export async function ensureDefaultAccessCode() {
   });
 }
 
-export async function verifyAccessCode(code: string): Promise<AccessCode | null> {
+export async function verifyAccessCode(code: string): Promise<AccessCodeRecord | null> {
   await ensureDefaultAccessCode();
   const normalized = code.trim();
   if (normalized.length < 4 || normalized.length > 64) return null;

@@ -7,6 +7,8 @@ export type RelayImageItem = {
   revised_prompt?: string | null;
 };
 
+export type RelayImageInputFidelity = "high" | "low";
+
 export type RelayChatMessage = {
   role: "system" | "user" | "assistant";
   content:
@@ -17,10 +19,91 @@ export type RelayChatMessage = {
       >;
 };
 
+function normalizeRelayBaseUrl(baseURL?: string) {
+  if (!baseURL) return baseURL;
+
+  const trimmed = baseURL.trim().replace(/\/+$/, "");
+  try {
+    const url = new URL(trimmed);
+    if (url.pathname === "/" || url.pathname === "") url.pathname = "/v1";
+    return url.toString().replace(/\/+$/, "");
+  } catch {
+    return trimmed;
+  }
+}
+
 export const relayClient = new OpenAI({
   apiKey: process.env.AI_RELAY_API_KEY,
-  baseURL: process.env.AI_RELAY_BASE_URL,
+  baseURL: normalizeRelayBaseUrl(process.env.AI_RELAY_BASE_URL),
 });
+
+function isHtmlDocument(text: string) {
+  const normalized = text.trim().slice(0, 5000).toLowerCase();
+  return (
+    normalized.startsWith("<!doctype html") ||
+    (normalized.startsWith("<html") && normalized.includes("<head")) ||
+    (normalized.includes("<script") && normalized.includes("window.__app_config__")) ||
+    (normalized.includes("<div id=\"app\"") && normalized.includes("/assets/"))
+  );
+}
+
+function assertModelText(text: string) {
+  if (isHtmlDocument(text)) {
+    throw new Error("Upstream model endpoint returned an HTML page instead of a model response. Check AI_RELAY_BASE_URL and make sure it points to the OpenAI-compatible API endpoint, usually ending with /v1.");
+  }
+
+  return text;
+}
+
+function parseImageItems(result: unknown): RelayImageItem[] {
+  const data = (result as { data?: unknown })?.data;
+  if (!Array.isArray(data)) {
+    throw new Error("图像接口没有返回有效图片数据。");
+  }
+
+  return data as RelayImageItem[];
+}
+
+function parseChatContent(result: unknown) {
+  if (typeof result === "string") return assertModelText(result.trim());
+
+  const directOutputText = (result as { output_text?: unknown })?.output_text;
+  if (typeof directOutputText === "string") return assertModelText(directOutputText.trim());
+
+  const choices = (result as {
+    choices?: Array<{ message?: { content?: unknown } }>;
+  })?.choices;
+
+  const content = choices?.[0]?.message?.content;
+  if (typeof content === "string") return assertModelText(content.trim());
+  if (Array.isArray(content)) {
+    return assertModelText(content
+      .map((part) => typeof part === "string" ? part : typeof part?.text === "string" ? part.text : "")
+      .join("")
+      .trim());
+  }
+
+  const output = (result as {
+    output?: Array<{
+      content?: Array<
+        | { type?: string; text?: unknown }
+        | { type?: string; output_text?: unknown }
+      >;
+    }>;
+  })?.output;
+  const outputText = output
+    ?.flatMap((item) => item.content || [])
+    .map((part) => {
+      if ("text" in part && typeof part.text === "string") return part.text;
+      if ("output_text" in part && typeof part.output_text === "string") return part.output_text;
+      return "";
+    })
+    .join("")
+    .trim();
+  if (outputText) return assertModelText(outputText);
+
+  throw new Error("对话接口没有返回有效回复。");
+}
 
 export async function generateImageByRelay(input: {
   model?: string;
@@ -35,7 +118,7 @@ export async function generateImageByRelay(input: {
     n: input.count || 1,
   });
 
-  return (result.data || []) as RelayImageItem[];
+  return parseImageItems(result);
 }
 
 export async function editImageByRelay(input: {
@@ -47,6 +130,7 @@ export async function editImageByRelay(input: {
   mimeType?: string;
   size?: "1024x1024" | "1024x1536" | "1536x1024";
   count?: number;
+  inputFidelity?: RelayImageInputFidelity;
 }) {
   const imageBuffers = input.imageBuffers || (input.imageBuffer ? [input.imageBuffer] : []);
   if (imageBuffers.length === 0) throw new Error("图片编辑需要至少一张参考图。");
@@ -65,10 +149,10 @@ export async function editImageByRelay(input: {
     prompt: input.prompt,
     size: input.size || "1024x1024",
     n: input.count || 1,
-    input_fidelity: "high",
+    input_fidelity: input.inputFidelity || "high",
   });
 
-  return (result.data || []) as RelayImageItem[];
+  return parseImageItems(result);
 }
 
 export async function chatByRelay(input: {
@@ -80,7 +164,7 @@ export async function chatByRelay(input: {
     messages: input.messages as never,
   });
 
-  return result.choices[0]?.message?.content?.trim() || "";
+  return parseChatContent(result);
 }
 
 export async function optimizePromptByRelay(input: {

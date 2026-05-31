@@ -47,8 +47,8 @@ export function localImageUrlToFilePath(url: string): string {
       throw new Error("Invalid upload image path.");
     }
 
-    if (!['composition', 'color', 'material', 'lighting', 'other'].includes(category)) {
-      throw new Error("Invalid upload image category.");
+    if (!["composition", "color", "material", "lighting", "other", "attachments"].includes(category)) {
+      throw new Error("不支持的上传图片分类。");
     }
 
     assertSafeFilename(filename);

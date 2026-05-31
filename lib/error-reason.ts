@@ -1,5 +1,5 @@
-const MAX_CUSTOM_IMAGE_SIZE = 10000; // 如果你后端仍然限制 8192，这里就改成 8192
-const MIN_CUSTOM_IMAGE_SIZE = 1;     // 如果你后端要求最小 256，这里就改成 256
+const MAX_CUSTOM_IMAGE_SIZE = 8192;
+const MIN_CUSTOM_IMAGE_SIZE = 100;
 
 export function getUpstreamStatus(error: unknown): number | null {
   if (
@@ -48,8 +48,12 @@ export function getShortErrorReason(error: unknown): string {
     return "模型名或接口地址不存在。";
   }
 
-  if (status === 408 || message.includes("timeout")) {
-    return "接口超时，请稍后重试。";
+  if (status === 408 || message.includes("timeout") || message.includes("timed out")) {
+    if (message.includes("edit") || message.includes("编辑")) {
+      return "图片编辑接口超时，请稍后重试，或降低优化数量后再试。";
+    }
+
+    return "模型接口超时，请稍后重试。";
   }
 
   if (status === 429) {

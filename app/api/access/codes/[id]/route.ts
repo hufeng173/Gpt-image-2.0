@@ -15,6 +15,7 @@ export async function DELETE(request: NextRequest, context: { params: Promise<{ 
     }
 
     await prisma.$transaction([
+      prisma.attachment.deleteMany({ where: { accessCodeId: id } }),
       prisma.savedConversation.deleteMany({ where: { accessCodeId: id } }),
       prisma.accessCode.delete({ where: { id } }),
     ]);

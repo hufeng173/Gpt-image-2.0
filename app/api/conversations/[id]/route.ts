@@ -8,12 +8,15 @@ export async function DELETE(request: NextRequest, context: { params: Promise<{ 
     const { id } = await context.params;
     const conversation = await prisma.savedConversation.findUnique({
       where: { id },
-      select: { accessCodeId: true },
+      select: { accessCodeId: true, accessCode: { select: { role: true } } },
     });
 
     if (!conversation) return NextResponse.json({ ok: true });
 
-    if (conversation.accessCodeId !== session.id && session.role !== "ADMIN") {
+    const canDelete = conversation.accessCodeId === session.id ||
+      (session.role === "ADMIN" && conversation.accessCode.role === "USER");
+
+    if (!canDelete) {
       return NextResponse.json(
         { ok: false, message: "无权删除其他用户的对话。" },
         { status: 403 },

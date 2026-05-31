@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:skills.sh)",
-      "WebFetch(domain:www.tsinghua.edu.cn)"
+      "WebFetch(domain:www.tsinghua.edu.cn)",
+      "Bash(pnpm dev *)",
+      "Bash(taskkill /PID 24008 /F)",
+      "Bash(cmd.exe *)",
+      "Bash(powershell.exe *)",
+      "Bash(pnpm build *)",
+      "Bash(pnpm start *)"
     ]
   }
 }

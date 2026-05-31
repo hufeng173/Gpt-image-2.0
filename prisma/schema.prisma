@@ -20,6 +20,8 @@ model User {
 
 model ImageJob {
   id           String    @id @default(cuid())
+  accessCodeId String?
+  accessCode   AccessCode? @relation(fields: [accessCodeId], references: [id])
   userId       String?
   user         User?     @relation(fields: [userId], references: [id])
   provider     String    @default("relay")
@@ -34,12 +36,16 @@ model ImageJob {
   createdAt    DateTime  @default(now())
   finishedAt   DateTime?
   images       Image[]
+
+  @@index([accessCodeId])
 }
 
 model Image {
   id        String   @id @default(cuid())
   jobId     String
   job       ImageJob @relation(fields: [jobId], references: [id])
+  accessCodeId String?
+  accessCode   AccessCode? @relation(fields: [accessCodeId], references: [id])
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
   url       String   @db.Text
@@ -47,6 +53,8 @@ model Image {
   height    Int?
   seed      String?
   createdAt DateTime @default(now())
+
+  @@index([accessCodeId])
 }
 
 model AccessCode {
@@ -58,6 +66,9 @@ model AccessCode {
   createdAt    DateTime             @default(now())
   lastUsedAt   DateTime?
   conversations SavedConversation[]
+  attachments   Attachment[]
+  imageJobs     ImageJob[]
+  images        Image[]
 }
 
 model SavedConversation {
@@ -68,9 +79,35 @@ model SavedConversation {
   messages     Json
   createdAt    DateTime
   updatedAt    DateTime
+  attachments  Attachment[]
 
   @@index([accessCodeId])
   @@index([updatedAt])
+}
+
+model Attachment {
+  id             String             @id @default(cuid())
+  accessCodeId   String
+  accessCode     AccessCode         @relation(fields: [accessCodeId], references: [id])
+  conversationId String?
+  conversation   SavedConversation? @relation(fields: [conversationId], references: [id])
+  messageId      String?
+  name           String
+  mimeType       String
+  size           Int
+  kind           AttachmentKind
+  status         AttachmentStatus   @default(READY)
+  url            String?            @db.Text
+  storagePath    String             @db.Text
+  summary        String?            @db.Text
+  materials      Json?
+  warnings       Json?
+  createdAt      DateTime           @default(now())
+
+  @@index([accessCodeId])
+  @@index([conversationId])
+  @@index([kind])
+  @@index([createdAt])
 }
 
 enum UserRole {
@@ -88,5 +125,19 @@ enum JobStatus {
   RUNNING
   SUCCEEDED
   PARTIAL_SUCCEEDED
+  FAILED
+}
+
+enum AttachmentKind {
+  IMAGE
+  DOCUMENT
+  SPREADSHEET
+  TEXT
+  OTHER
+}
+
+enum AttachmentStatus {
+  PROCESSING
+  READY
   FAILED
 }

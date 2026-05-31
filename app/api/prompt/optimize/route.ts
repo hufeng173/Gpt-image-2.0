@@ -5,6 +5,7 @@ import { getAppSettings } from "@/lib/settings";
 import { getErrorMessage, getShortErrorReason, getUpstreamStatus } from "@/lib/error-reason";
 import { localImageUrlToDataUrl } from "@/lib/image-files";
 import { requireAccessSession } from "@/lib/access-control";
+import { formatAttachmentsForPrompt } from "@/lib/attachments";
 
 const MAX_VISION_OPTIMIZE_REFERENCES = 8;
 
@@ -19,6 +20,15 @@ const ReferenceImageSchema = z.object({
   name: z.string().optional(),
 });
 
+const AttachmentSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  kind: z.string().optional(),
+  summary: z.string().optional(),
+  url: z.string().nullable().optional(),
+  materials: z.unknown().optional(),
+});
+
 const OptimizeSchema = z.object({
   prompt: z.string().max(6000).optional().default(""),
   userMessage: z.string().optional(),
@@ -26,6 +36,7 @@ const OptimizeSchema = z.object({
   referenceImageUrls: z.array(z.string()).max(20).optional(),
   referenceImages: z.array(ReferenceImageSchema).max(20).optional(),
   conversation: z.array(ChatMessageSchema).max(40).optional(),
+  attachments: z.array(AttachmentSchema).max(12).optional().default([]),
   model: z.string().optional(),
 });
 
@@ -81,9 +92,10 @@ export async function POST(request: NextRequest) {
     );
 
     try {
+      const attachmentPrompt = formatAttachmentsForPrompt(input.attachments);
       const optimizedPrompt = await optimizePromptByRelay({
         model: input.model || settings.promptOptimizerModel,
-        prompt: input.prompt,
+        prompt: [input.prompt, attachmentPrompt].filter(Boolean).join("\n\n"),
         userMessage: input.userMessage,
         selectedImageUrl,
         referenceImageUrls: input.referenceImageUrls,
@@ -108,14 +120,17 @@ export async function POST(request: NextRequest) {
       });
     }
   } catch (error) {
+    const message = getErrorMessage(error);
+    const status = message.includes("请先输入正确口令") ? 401 : message.includes("无权") || message.includes("跨站") ? 403 : 400;
+
     return NextResponse.json(
       {
         ok: false,
         error: "PROMPT_OPTIMIZE_FAILED",
-        message: getErrorMessage(error),
+        message,
         shortReason: getShortErrorReason(error),
       },
-      { status: 400 },
+      { status },
     );
   }
 }

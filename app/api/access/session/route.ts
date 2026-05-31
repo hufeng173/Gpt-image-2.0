@@ -8,7 +8,10 @@ const LoginSchema = z.object({
 
 export async function GET(request: NextRequest) {
   const session = await getAccessSession(request);
-  return NextResponse.json({ ok: true, authenticated: Boolean(session), session });
+  return NextResponse.json(
+    { ok: true, authenticated: Boolean(session), session },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }
 
 export async function POST(request: NextRequest) {
@@ -25,19 +28,25 @@ export async function POST(request: NextRequest) {
     }
 
     const session = { id: accessCode.id, role: accessCode.role, label: accessCode.label };
-    const response = NextResponse.json({ ok: true, session });
+    const response = NextResponse.json(
+      { ok: true, session },
+      { headers: { "Cache-Control": "no-store" } },
+    );
     setAccessCookie(response, session);
     return response;
   } catch {
     return NextResponse.json(
       { ok: false, message: "口令格式不正确。" },
-      { status: 400 },
+      { status: 400, headers: { "Cache-Control": "no-store" } },
     );
   }
 }
 
 export async function DELETE() {
-  const response = NextResponse.json({ ok: true });
+  const response = NextResponse.json(
+    { ok: true },
+    { headers: { "Cache-Control": "no-store" } },
+  );
   clearAccessCookie(response);
   return response;
 }

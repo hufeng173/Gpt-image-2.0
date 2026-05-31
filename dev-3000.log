@@ -1,0 +1,18 @@
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://26.42.140.201:3000
+- Environments: .env.local, .env
+✓ Ready in 246ms
+
+ GET / 200 in 208ms (next.js: 89ms, application-code: 119ms)
+ GET / 200 in 26ms (next.js: 3ms, application-code: 22ms)
+ GET /api/access/session 200 in 109ms (next.js: 67ms, application-code: 41ms)
+ GET /api/settings 200 in 109ms (next.js: 98ms, application-code: 11ms)
+ GET /api/conversations 200 in 83ms (next.js: 56ms, application-code: 27ms)
+ GET /api/access/codes 200 in 85ms (next.js: 72ms, application-code: 13ms)
+ GET /api/images 200 in 87ms (next.js: 35ms, application-code: 51ms)
+ GET /api/access/session 200 in 6ms (next.js: 1548µs, application-code: 4ms)
+ GET /api/settings 200 in 8ms (next.js: 3ms, application-code: 4ms)
+ POST /api/conversations 200 in 8ms (next.js: 2ms, application-code: 6ms)
+ GET / 200 in 36ms (next.js: 3ms, application-code: 33ms)
+ GET / 200 in 36ms (next.js: 3ms, application-code: 33ms)

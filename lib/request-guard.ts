@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
 
+const DEV_TUNNEL_ORIGINS = ["trycloudflare.com", "loca.lt"];
+
 function getAllowedOrigins(request: NextRequest) {
   const host = request.headers.get("host");
   const forwardedHost = request.headers.get("x-forwarded-host");
@@ -13,12 +15,23 @@ function getAllowedOrigins(request: NextRequest) {
   ]);
 }
 
+function isAllowedDevTunnelOrigin(origin: string) {
+  if (process.env.NODE_ENV === "production") return false;
+
+  try {
+    const hostname = new URL(origin).hostname.toLowerCase();
+    return DEV_TUNNEL_ORIGINS.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`));
+  } catch {
+    return false;
+  }
+}
+
 export function assertWritableRequest(request: NextRequest) {
   const adminToken = process.env.APP_ADMIN_TOKEN;
   const origin = request.headers.get("origin");
 
   if (origin) {
-    if (!getAllowedOrigins(request).has(origin)) {
+    if (!getAllowedOrigins(request).has(origin) && !isAllowedDevTunnelOrigin(origin)) {
       throw new Error("跨站请求被拒绝。");
     }
 

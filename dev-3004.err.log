@@ -1,0 +1,248 @@
+IMAGE_GENERATION_ERROR: Error: Invalid upload image category.
+    at localImageUrlToFilePath (lib\image-files.ts:51:13)
+    at readPublicImage (lib\image-files.ts:97:20)
+    at readPreparedLocalImage (lib\image-files.ts:155:23)
+    at imageUrlToBuffer (app\api\images\generate\route.ts:312:47)
+    at <unknown> (app\api\images\generate\route.ts:356:61)
+    at Array.map (<anonymous>)
+    at prepareReferenceBatch (app\api\images\generate\route.ts:356:48)
+    at POST (app\api\images\generate\route.ts:532:16)
+  49 |
+  50 |     if (!['composition', 'color', 'material', 'lighting', 'other'].includes(category)) {
+> 51 |       throw new Error("Invalid upload image category.");
+     |             ^
+  52 |     }
+  53 |
+  54 |     assertSafeFilename(filename);
+IMAGE_GENERATION_ERROR: Error: Invalid upload image category.
+    at localImageUrlToFilePath (lib\image-files.ts:51:13)
+    at readPublicImage (lib\image-files.ts:97:20)
+    at readPreparedLocalImage (lib\image-files.ts:155:23)
+    at imageUrlToBuffer (app\api\images\generate\route.ts:312:47)
+    at <unknown> (app\api\images\generate\route.ts:356:61)
+    at Array.map (<anonymous>)
+    at prepareReferenceBatch (app\api\images\generate\route.ts:356:48)
+    at POST (app\api\images\generate\route.ts:532:16)
+  49 |
+  50 |     if (!['composition', 'color', 'material', 'lighting', 'other'].includes(category)) {
+> 51 |       throw new Error("Invalid upload image category.");
+     |             ^
+  52 |     }
+  53 |
+  54 |     assertSafeFilename(filename);
+IMAGE_GENERATION_ERROR: Error: Invalid upload image category.
+    at localImageUrlToFilePath (lib\image-files.ts:51:13)
+    at readPublicImage (lib\image-files.ts:97:20)
+    at readPreparedLocalImage (lib\image-files.ts:155:23)
+    at imageUrlToBuffer (app\api\images\generate\route.ts:312:47)
+    at <unknown> (app\api\images\generate\route.ts:356:61)
+    at Array.map (<anonymous>)
+    at prepareReferenceBatch (app\api\images\generate\route.ts:356:48)
+    at POST (app\api\images\generate\route.ts:532:16)
+  49 |
+  50 |     if (!['composition', 'color', 'material', 'lighting', 'other'].includes(category)) {
+> 51 |       throw new Error("Invalid upload image category.");
+     |             ^
+  52 |     }
+  53 |
+  54 |     assertSafeFilename(filename);
+IMAGE_GENERATION_ERROR: Error: Invalid upload image category.
+    at localImageUrlToFilePath (lib\image-files.ts:51:13)
+    at readPublicImage (lib\image-files.ts:97:20)
+    at readPreparedLocalImage (lib\image-files.ts:155:23)
+    at imageUrlToBuffer (app\api\images\generate\route.ts:312:47)
+    at <unknown> (app\api\images\generate\route.ts:356:61)
+    at Array.map (<anonymous>)
+    at prepareReferenceBatch (app\api\images\generate\route.ts:356:48)
+    at POST (app\api\images\generate\route.ts:532:16)
+  49 |
+  50 |     if (!['composition', 'color', 'material', 'lighting', 'other'].includes(category)) {
+> 51 |       throw new Error("Invalid upload image category.");
+     |             ^
+  52 |     }
+  53 |
+  54 |     assertSafeFilename(filename);
+IMAGE_GENERATION_ERROR: Error: Invalid upload image category.
+    at localImageUrlToFilePath (lib\image-files.ts:51:13)
+    at readPublicImage (lib\image-files.ts:97:20)
+    at readPreparedLocalImage (lib\image-files.ts:155:23)
+    at imageUrlToBuffer (app\api\images\generate\route.ts:312:47)
+    at <unknown> (app\api\images\generate\route.ts:356:61)
+    at Array.map (<anonymous>)
+    at prepareReferenceBatch (app\api\images\generate\route.ts:356:48)
+    at POST (app\api\images\generate\route.ts:532:16)
+  49 |
+  50 |     if (!['composition', 'color', 'material', 'lighting', 'other'].includes(category)) {
+> 51 |       throw new Error("Invalid upload image category.");
+     |             ^
+  52 |     }
+  53 |
+  54 |     assertSafeFilename(filename);
+[browser] ⨯ unhandledRejection: ReferenceError: loadAccessCodes is not defined
+    at Home.useCallback[loadSession] (app/page.tsx:304:43)
+  302 |     if (data.authenticated) {
+  303 |       void loadConversations();
+> 304 |       if (data.session?.role === "ADMIN") void loadAccessCodes();
+      |                                           ^
+  305 |     }
+  306 |   }, [loadConversations]);
+  307 |
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+IMAGE_GENERATION_ERROR: Error: Invalid upload image category.
+    at localImageUrlToFilePath (lib\image-files.ts:51:13)
+    at readPublicImage (lib\image-files.ts:97:20)
+    at readPreparedLocalImage (lib\image-files.ts:155:23)
+    at imageUrlToBuffer (app\api\images\generate\route.ts:312:47)
+    at <unknown> (app\api\images\generate\route.ts:356:61)
+    at Array.map (<anonymous>)
+    at prepareReferenceBatch (app\api\images\generate\route.ts:356:48)
+    at POST (app\api\images\generate\route.ts:532:16)
+  49 |
+  50 |     if (!['composition', 'color', 'material', 'lighting', 'other'].includes(category)) {
+> 51 |       throw new Error("Invalid upload image category.");
+     |             ^
+  52 |     }
+  53 |
+  54 |     assertSafeFilename(filename);
+IMAGE_GENERATION_ERROR: Error: Invalid upload image category.
+    at localImageUrlToFilePath (lib\image-files.ts:51:13)
+    at readPublicImage (lib\image-files.ts:97:20)
+    at readPreparedLocalImage (lib\image-files.ts:155:23)
+    at imageUrlToBuffer (app\api\images\generate\route.ts:312:47)
+    at <unknown> (app\api\images\generate\route.ts:356:61)
+    at Array.map (<anonymous>)
+    at prepareReferenceBatch (app\api\images\generate\route.ts:356:48)
+    at POST (app\api\images\generate\route.ts:532:16)
+  49 |
+  50 |     if (!['composition', 'color', 'material', 'lighting', 'other'].includes(category)) {
+> 51 |       throw new Error("Invalid upload image category.");
+     |             ^
+  52 |     }
+  53 |
+  54 |     assertSafeFilename(filename);
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 
+[browser] Encountered two children with the same key, `视觉风格参考：保留图片中的核心主体、构图气质和主要色彩关系。；图片附件作为综合视觉参考，不强制拆成分类参考图。`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version. 

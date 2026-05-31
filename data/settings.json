@@ -1,5 +1,5 @@
 {
-  "maxConcurrentGenerations": 8,
+  "maxConcurrentGenerations": 7,
   "defaultImageModel": "gpt-image-2",
   "promptOptimizerModel": "gpt-5.4",
   "allowReferenceImageEdit": true,
@@ -8,6 +8,10 @@
       "id": "gpt-image-2",
       "name": "GPT Image 2",
       "note": "当前已验证可用"
+    },
+    {
+      "id": "gpt-image-1.5",
+      "name": "GPT Image 1.5"
     },
     {
       "id": "gpt-image-1",
@@ -24,6 +28,36 @@
     {
       "id": "dall-e-3",
       "name": "DALL·E 3"
+    }
+  ],
+  "textModels": [
+    {
+      "id": "gpt-5.5",
+      "name": "GPT-5.5",
+      "note": "高质量附件理解"
+    },
+    {
+      "id": "gpt-5.4",
+      "name": "GPT-5.4",
+      "note": "默认推荐"
+    },
+    {
+      "id": "gpt-5.4-mini",
+      "name": "GPT-5.4 Mini",
+      "note": "轻量快速"
+    },
+    {
+      "id": "gpt-5.3-codex",
+      "name": "GPT-5.3 Codex",
+      "note": "开发代理"
+    },
+    {
+      "id": "gpt-5.3-codex-spark",
+      "name": "GPT-5.3 Codex Spark"
+    },
+    {
+      "id": "gpt-5.2",
+      "name": "GPT-5.2"
     }
   ]
 }

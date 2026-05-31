@@ -4,7 +4,7 @@ import path from "node:path";
 
 export const runtime = "nodejs";
 
-const ALLOWED_CATEGORIES = new Set(["composition", "color", "material", "lighting", "other"]);
+const ALLOWED_CATEGORIES = new Set(["composition", "color", "material", "lighting", "other", "attachments"]);
 
 function getContentType(filename: string) {
   const lower = filename.toLowerCase();
@@ -15,7 +15,7 @@ function getContentType(filename: string) {
 
 export async function GET(
   _request: NextRequest,
-  context: { params: Promise<any> },
+  context: { params: Promise<{ category: string; filename: string }> },
 ) {
   try {
     const { category, filename } = await context.params;
